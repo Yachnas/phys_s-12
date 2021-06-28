@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>PHYSCI 70: Intro to Digital Fabrication </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <link href="./style.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container-fluid bg-3 text-start">
+        <br>
+        <h3>Design</h3>
+        <br>
+        <div class = "row">
+            <div class = "col-sm-8"
+                <p>
+                    Our second lesson covers creating two-dimensional and three-dimensional models using CAD software.
+                    Modeling complex shapes and solids is crucial to digital fabrication, as vector CAD files instruct fablab tools ranging from laser cutters to 3d printers.
+                    These versatile tools enable countless possibilities for independent fabrication, minimizing reliance on private entities for manufactured products and alleviating pressure on the environment.
+                </p>
+            </div>
+        </div>
+        <div class = "row">
+            <div class="col-sm-8">
+                <b>Assignment</b>
+                <p>
+                <br>
+                    Work through a Fusion 360 tutorial, like this or some of these. (or other if you are using other software) and document your learning.
+                    Select at least 2 components from the kit (or other simple household objects). Measure them using calipers, and model them in Fusion 360 (or other program). Create an assembly of multiple components, and document your work on your webpage. You may also incorporate items from our existing library of kit parts. Contributions of kit items that are not already modeled are welcome.
+                </p>
+            </div>
+        </div>
+        <b>Measurements</b>
+        <div class = "row">
+            <div class = "col-sm-8">
+            <p>
+            <br>
+                For this assignment I chose to model a plastic cup I found in my household and an AA battery from our kit. I first prepared my caliper by turning it on, shifting the outside jaw to its default position at the beginning of the ruler, and pressing the zero button to correct its slight initial inaccuracy. Since the caliper came preconfigured to use millimeters I did not need to adjust its unit of measurement with the unit button. I gathered the plastic cup and the AA battery and proceeded to measure them carefully with the caliper.
+            </p>
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-lg">
+                <br>
+                <img src="objects.jpg" class="img-responsive margin" style="width:40%" alt="Sew">
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-sm-8">
+            <p>
+            <br>
+                After recording the cup radii, cup height, cup thickness, battery base, battery height and battery terminal measurements I proceeded to create a sketch of each object to get an idea for how I would replicate them using the techniques I learned from class and from viewing the aforementioned beginner tutorials.
+            </p>
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-sm">
+                <img src="sketch_cup.png" class="img-responsive margin" style="width:80%" alt="Sew">
+            </div>
+            <div class = "col-sm">
+                <b>Cup Sketch</b>
+                <p>
+                    <br>
+                    I made sure to clearly illustrate the dimensions of the cup in preparation for modeling. The top left portion of the sketch illustrates a perspective view of the cup with both the top and bottom radii dimensions labeled.
+                    To its right a side view illustrates the height of the cup, and the bottom of the sketch magnifies the edge of the cup to outline the thickness of the plastic.
+                </p>
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-sm">
+                <img src="sketch_battery.png" class="img-responsive margin" style="width:80%" alt="Sew">
+            </div>
+            <div class = "col-sm">
+                <b>Battery Sketch</b>
+                <p>
+                    <br>
+                    I continued, sketching the dimensions of the battery to clarify its figure prior to modeling. The top left portion of the sketch specifies the proportions of the battery base, while the section to its right illustrates the height of both the battery and its terminals separately.
+                    The bottom left portion of the sketch elaborates on the horizontal positions and dimensions of the battery terminals. To its right the accompanying vertical positions and dimensions of the battery terminals are outlined.
+                </p>
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-sm-8">
+                <b><br>Cup Model</b>
+                <p>
+                <br>
+                    To model the cup I would need to find a way to create a hollow cylindrical solid. I searched through tutorials and found that I could draw a silhouette of the cup and rotate it about the origin to create the cylindrical solid.
+                    I could then use the shell modify tool to hollow the solid and finalize the cup model.
+                </p>
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-sm-8">
+                <img src="cup_model_1.png" class="img-responsive margin" style="width:80%" alt="Sew">
+            </div>
+            <div class = "col-sm-4">
+                <p>
+                    This image shows me drawing the silhouette of the cup. I used a line tool to draw the straight portions of the cup silhouette, and I used a spline tool to approximate the ridged exterior of the cup.
+                    I switched from using the conventional spline tool to the spline with control points tool because I thought it made more realistic looking ridges.
+                    I made sure to use the dimensions outlined on the cup sketch to create a model that would mirror its real life counterpart.
+                </p>
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-sm-8">
+                <img src="cup_model_2.png" class="img-responsive margin" style="width:80%" alt="Sew">
+            </div>
+            <div class = "col-sm-4">
+                <p>
+                    This image shows me using the revolve tool to rotate the shape formed by the lines in the previous step 360 degrees about the y-axis.
+                </p>
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-sm-8">
+                <img src="cup_model_4.png" class="img-responsive margin" style="width:80%" alt="Sew">
+            </div>
+            <div class = "col-sm-4">
+                <p>
+                    This image shows me using a shell tool to hollow the interior of the subsequent solid formed by applying the revolve tool.
+                    Like in the first step, I ensure that the thickness of the material matches the dimension outlined in the cup sketch.
+                </p>
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-sm-8">
+                <img src="cup_model_5.png" class="img-responsive margin" style="width:80%" alt="Sew">
+            </div>
+            <div class = "col-sm-4">
+                <p>
+                    This image shows me nearing the end of the cup modeling process. To make the model look more like a cup I change its render material to glass.
+                    I tried using plastic materials, but they looked too opaque. I tried using different color variants of glass but the plain one looked the most accurate so I stuck with it.
+                </p>
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-sm-8">
+                <img src="cup_render.png" class="img-responsive margin" style="width:80%" alt="Sew">
+            </div>
+            <div class = "col-sm-4">
+                <p>
+                    This image illustrates the final render of the cup model. Overall I am pretty happy with the final outcome.
+                    I think modeling the cup helped me a lot with familiarizing myself with the user interface of Fusion 360 as well as using its basic features.
+                </p>
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-sm-8">
+                <b><br>Cup Download</b>
+                <p>
+                <br>
+                    I exported the cup model from Fusion 360 as a .stl file. It can be downloaded by clicking
+                    <a href = "cup_export.stl" download> this link. </a>
+                </p>
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-sm-8">
+                <b><br>Battery Model</b>
+                <p>
+                <br>
+                    On the other hand, to model the battery I could just apply the knowledge I gained during class regarding sketches, lines, extrusions and components. I could create a rectangular prism solid and fillet its corners to imitate the appearance of the battery.
+                    I could then create and model each of the terminals separately. Finally I would merge all three components into a single assembly file to finalize the battery model.
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
