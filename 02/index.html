@@ -32,6 +32,18 @@
                 </p>
             </div>
         </div>
+        <div class = "row">
+            <div class="col-sm-8">
+                <b>Learning</b>
+                <p>
+                <br>
+                    After working through the beginner Fusion 360 tutorial by CAD CAM tutorials on Youtube I learned a lot about creating complex two-dimensional designs.
+                    The segment on the line tool built on what I learned during class by specifying how to create lines with angles (tab) as well as how to create arcs (press and drag mouse button 1).
+                    The information regarding the tangent symbol was also useful because I could use it to create lines connecting circular shapes together.
+                    On top of the notes I took in class, I felt that everything I knew about Fusion 360 up to this point was enough to begin the assignment.
+                </p>
+            </div>
+        </div>
         <b>Measurements</b>
         <div class = "row">
             <div class = "col-sm-8">
@@ -152,7 +164,12 @@
                 <p>
                 <br>
                     I exported the cup model from Fusion 360 as a .stl file. It can be downloaded by clicking
-                    <a href = "cup_export.stl" download> this link. </a>
+                    <a href = "cup_export.stl" download> this first link. </a>
+                </p>
+                <p>
+                    I also exported the cup model as a .f3d file. It can be downloaded by clicking
+                    <a href = "cup_export_fusion.f3d" download> this second link. </a>
+                <br>
                 </p>
             </div>
         </div>
@@ -161,8 +178,185 @@
                 <b><br>Battery Model</b>
                 <p>
                 <br>
-                    On the other hand, to model the battery I could just apply the knowledge I gained during class regarding sketches, lines, extrusions and components. I could create a rectangular prism solid and fillet its corners to imitate the appearance of the battery.
+                    To model the battery I could build off the practice I got from modeling the cup, and I could also try to use newer tools like the hole tool and the component-assembly system in Fusion 360.
+                    For the model itself I could create a rectangular prism solid and fillet its corners to imitate the appearance of the battery.
                     I could then create and model each of the terminals separately. Finally I would merge all three components into a single assembly file to finalize the battery model.
+                </p>
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-sm-8">
+                <img src="battery_model_1.png" class="img-responsive margin" style="width:80%" alt="Sew">
+            </div>
+            <div class = "col-sm-4">
+                <p>
+                    This image shows me creating the sketch for the battery base. I outlined where the terminals would be placed with construction lines,
+                    using the dimensions outlined in the battery sketch.
+                </p>
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-sm-8">
+                <img src="battery_model_2.png" class="img-responsive margin" style="width:80%" alt="Sew">
+            </div>
+            <div class = "col-sm-4">
+                <p>
+                    This image shows the result of extruding the sketch by the height of the battery base (roughly 44.67 mm).
+                </p>
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-sm-8">
+                <img src="battery_model_3.png" class="img-responsive margin" style="width:80%" alt="Sew">
+            </div>
+            <div class = "col-sm-4">
+                <p>
+                    This image documents the beginning of the positive battery terminal.
+                    Like the cup model, I imitate the straight bottom and top edges of the terminal with the line tool and use the spline tool to approximate its curved exterior.
+                </p>
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-sm-8">
+                <img src="battery_model_4.png" class="img-responsive margin" style="width:80%" alt="Sew">
+            </div>
+            <div class = "col-sm-4">
+                <p>
+                    Next I use the revolve tool to rotate the shape formed by the lines 360 degrees about the y-axis.
+                </p>
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-sm-8">
+                <img src="battery_model_5.png" class="img-responsive margin" style="width:80%" alt="Sew">
+            </div>
+            <div class = "col-sm-4">
+                <p>
+                    I use a shell tool to hollow the resulting solid and form the interior of the positive battery terminal.
+                    I could not get an accurate measurement of the thickness of the positive battery terminal, so I just tried to match the thickness to what I could see at a glance from observing the battery.
+                </p>
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-sm-8">
+                <img src="battery_model_6.png" class="img-responsive margin" style="width:80%" alt="Sew">
+            </div>
+            <div class = "col-sm-4">
+                <p>
+                    I fillet the interior bottom edge of the solid to the point where it forms a smaller circular area at the bottom where I could create another hole.
+                </p>
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-sm-8">
+                <img src="battery_model_7.png" class="img-responsive margin" style="width:80%" alt="Sew">
+            </div>
+            <div class = "col-sm-4">
+                <p>
+                    I extrude that resulting circular area by -0.25 mm to create the aforementioned hole.
+                    This finalizes the positive terminal component of the battery assembly.
+                </p>
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-sm-8">
+                <img src="battery_model_8.png" class="img-responsive margin" style="width:80%" alt="Sew">
+            </div>
+            <div class = "col-sm-4">
+                <p>
+                    This image documents the beginning of the negative battery terminal.
+                    I sketch a construction line with the width of the negative battery terminal before sketching a hexagon shape of the same width.
+                    I make sure to follow the measurements specified in the battery sketch.
+                </p>
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-sm-8">
+                <img src="battery_model_9.png" class="img-responsive margin" style="width:80%" alt="Sew">
+            </div>
+            <div class = "col-sm-4">
+                <p>
+                    Next I extrude the hexagon by the height of the negative battery terminal and fillet all of its edges.
+                </p>
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-sm-8">
+                <img src="battery_model_10.png" class="img-responsive margin" style="width:80%" alt="Sew">
+            </div>
+            <div class = "col-sm-4">
+                <p>
+                    After filleting the edges I use the hole modification tool to drill a hole at the center of the negative battery terminal with a flat bottom.
+                    I would then once again fillet the bottom edge of the new hole to create a smaller circular area at the bottom like in the positive battery terminal.
+                </p>
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-sm-8">
+                <img src="battery_model_11.png" class="img-responsive margin" style="width:80%" alt="Sew">
+            </div>
+            <div class = "col-sm-4">
+                <p>
+                    I use a hole tool again to bore an even smaller hole into the new small circular area.
+                </p>
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-sm-8">
+                <img src="battery_model_12.png" class="img-responsive margin" style="width:80%" alt="Sew">
+            </div>
+            <div class = "col-sm-4">
+                <p>
+                    Afterwards I extrude the smaller hole by less than one millimeter and bore another hole into it with before filleting the bottom edge of that hole to finalize the negative battery terminal.
+                </p>
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-sm-8">
+                <img src="battery_model_13.png" class="img-responsive margin" style="width:80%" alt="Sew">
+            </div>
+            <div class = "col-sm-4">
+                <p>
+                    With the battery base, negative battery terminal and positive battery terminal components finished, I could put them together in an assembly to create the battery.
+                    I changed each file to read-only to prevent myself from accidentally messing with the objects.
+                </p>
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-sm-8">
+                <img src="battery_model_14.png" class="img-responsive margin" style="width:80%" alt="Sew">
+            </div>
+            <div class = "col-sm-4">
+                <p>
+                    I moved each component around, using the construction lines of the battery base sketch as guidelines for where to position the terminals.
+                    Once I moved each terminal into the appropriate position the battery model was finished.
+                </p>
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-sm-8">
+                <img src="battery_model_render.png" class="img-responsive margin" style="width:80%" alt="Sew">
+            </div>
+            <div class = "col-sm-4">
+                <p>
+                    This image illustrates the final render of the battery model.
+                    Rendering the AA battery was definitely the funnest part of this lesson because I could look at how cool the final result was with shadows and stuff.
+                    I tried to upload the AA battery model to the Fusion 360 PHYSCI 70 kit, but I was not able to because it said my account only had basic access.
+                </p>
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-sm-8">
+                <b><br>Battery Download</b>
+                <p>
+                <br>
+                    I exported the battery model from Fusion 360 as a .stl file. It can be downloaded by clicking
+                    <a href = "battery_export.stl" download> this link. </a>
+                </p>
+                <p>
+                    I also exported the cup model as a .f3z file. It can be downloaded by clicking
+                    <a href = "battery_export_fusion.f3z" download> this second link. </a>
+                <br>
                 </p>
             </div>
         </div>
