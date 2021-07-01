@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>PHYSCI 70: Intro to Digital Fabrication </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <link href="./style.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container-fluid bg-3 text-start">
+        <br>
+        <h3>Electronics & Tools</h3>
+        <br>
+        <div class = "row">
+            <div class = "col-sm-8">
+                <p>
+                    Our third lesson covers electronics design using the Metro M0 Express microcontroller and various transducers provided in the kit.
+                    We also cover the usage of the wire stripper and multimeter for constructing and testing circuitry.
+                    Designing circuits that observe and interact with the real world is a fundamental part of digital fabrication.
+                </p>
+            </div>
+        </div>
+        <div class = "row">
+            <div class="col-sm-8">
+                <b>Assignment</b>
+                <p>
+                <br>
+                    Make a circuit on a breadboard with components in the kit. Use a multimeter to measure the voltages in your circuit. Use Ohm's law to calculate the current through some part of the circuit.
+                    Simulate your circuit.
+                    Use the Microcontroller Analog in (ADC) to measure the voltage of a potentiometer, or other voltage-divider-based sensor.
+                    Document your work and learning.
+                </p>
+            </div>
+        </div>
+        <div class = "row">
+            <div class="col-sm-8">
+                <b>Circuit Building</b>
+                <p>
+                <br>
+                    I created a simple breadboard voltage divider circuit using two resistors.
+                    After reviewing the readings on electricity and arduino building the circuit was straightforward.
+                    I have never done hands on stuff with computers before so I had a lot of fun doing this and I was definitely ready to do the potentiometer segment.
+                </p>
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-lg">
+                <br>
+                <img src="circuits_1.jpg" class="img-responsive margin" style="width:40%" alt="Sew">
+            </div>
+        </div>
+        <div class = "row">
+            <div class="col-sm-8">
+                <b><br>Multimeter & Ohms Law</b>
+                <p>
+                <br>
+                    I used the multimeter to measure the voltage preceding the first resistor and got a reading of 3.3 volts.
+                    This made sense because the flow of charge leading up to the first resistor faced no prior resistance as it flowed from the 3.3 volt Metro M0 Express power supply.
+                    Next I used the multimeter to measure the voltage succeeding the first resistor and got a reading of roughly 1.65 volts, roughly half of the previous measurement.
+                    Lastly I measured the voltage following the second resistor and got 0 volts, once again halving the initial voltage.
+                    After having measured the voltages I calculated the current of the circuit using Ohm's law.
+                </p>
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-lg">
+                <br>
+                <img src="circuits_2.jpg" class="img-responsive margin" style="width:40%" alt="Sew">
+                <img src="circuits_3.jpg" class="img-responsive margin" style="width:40%" alt="Sew">
+            </div>
+        </div>
+        <div class = "row">
+            <div class="col-sm-8">
+                <b><br>Circuit Simulation</b>
+                <p>
+                <br>
+                    I then tried to recreate the circuit I built in real life in tinkercad so that I could simulate it.
+                    I attached a multimeter to the simulated circuit and checked the voltages before and after each resistor and got the same measurements I did in reality.
+                </p>
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-lg">
+                <br>
+                <img src="circuits_4.png" class="img-responsive margin" style="width:40%" alt="Sew">
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-lg">
+                <br>
+                <img src="circuits_5.png" class="img-responsive margin" style="width:40%" alt="Sew">
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-lg">
+                <br>
+                <img src="circuits_6.png" class="img-responsive margin" style="width:40%" alt="Sew">
+            </div>
+        </div>
+        <div class = "row">
+            <div class="col-sm-8">
+                <b><br>Using the Potentiometer</b>
+                <p>
+                <br>
+                    Finally I took out the wires and transducers in my breadboard to create another circuit using a potentiometer.
+                    The potentiometer can be physically turned to adjust its resistance, dynamically altering the current running through the circuit.
+                </p>
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-lg">
+                <br>
+                <img src="circuits_7.jpg" class="img-responsive margin" style="width:40%" alt="Sew">
+                <img src="circuits_8.jpg" class="img-responsive margin" style="width:40%" alt="Sew">
+            </div>
+        </div>
+        <div class = "row">
+            <div class="col-sm-8">
+                <br>
+                    I then used the analogRead (Microcontroller Analog In) function in an arduino sketch to print the voltage of the potentiometer to the arduino IDE console.
+                </p>
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-lg">
+                <br>
+                <img src="circuits_9.png" class="img-responsive margin" style="width:80%" alt="Sew">
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-lg">
+                <br>
+                <img src="circuits_10.png" class="img-responsive margin" style="width:80%" alt="Sew">
+            </div>
+        </div>
+    </div>
+</body>
+</html>
