@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>PHYSCI 70: Intro to Digital Fabrication </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <link href="./style.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container-fluid bg-3 text-start">
+        <br>
+        <h3>Rapid Prototyping</h3>
+        <br>
+        <div class = "row">
+            <div class="col-sm-8">
+                <b>Preparation</b>
+                <p>
+                <br>
+                    For this assignment I decided to create a prototype of my final project - a simple controller that I could move to control something on screen.
+                    In order to create the controller I gathered the ESP32 Huzzah Microcontroller, the accelerometer, and some wires from the kit.
+                    I wanted to use the ESP32 microcontroller rather than the conventional Adafruit Metro M0 Express because I needed a way to send data over wifi.
+                    I then installed the ESP32 MacOS drivers as well as the board package in the Arduino board manager.
+                    I also installed the Adafruit unified sensor library and the Adafruit LIS3DH library to communicate with the accelerometer from the microcontroller.
+                </p>
+                <p>
+                <br>
+                    Afterwards I connected the ESP32 to the LIS3DH. I used this
+                    <a href = "https://learn.adafruit.com/adafruit-lis3dh-triple-axis-accelerometer-breakout/arduino">website</a>
+                    as a guide.
+                </p>
+            </div>
+            <div class = "row">
+                <div class = "col-lg">
+                    <br>
+                    <img src="img3.jpg" class="img-responsive margin" style="width:40%" alt="Sew">
+                </div>
+            </div>
+            <div class="col-sm-8">
+                <b><br>Communication</b>
+                <p>
+                <br>
+                    I wanted the controller and the game to communicate via UDP.
+                    I chose UDP because bluetooth would have taken too long and TCP (ESP32 js server) did not match the specifications of what I wanted to do (fast, unreliable packet delivery).
+                    For the prototype of my final project I tried to make a simple way for the controller to talk to the game.
+                </p>
+                 <p>
+                <br>
+                    The controller would be an idle state, and when it's shaken it would ask the game to connect a couple times with a single byte in a connecting state.
+                    The game would respond with another byte, and the controller would switch to a connected state and begin sending the numbers from its accelerometer.
+                    If the game doesn't receive data for a certain amount of time it disconnects, and if the controller isnt moved for a certain amount of time it stops sending data and goes back to idling.
+                    (I added in the last part for demonstration purposes to showcase the disconnection/ connection part during website review)
+                <p>
+            </div>
+            <div class = "row">
+                <div class = "col-lg">
+                    <br>
+                    <img src="img1.png" class="img-responsive margin" style="width:80%" alt="Sew">
+                </div>
+            </div>
+            <div class="col-sm-8">
+                <b><br>Unity Engine</b>
+                <p>
+                <br>
+                    I tested the previous stuff with a .NET core console application and the ESP32 attached to the LIS3DH.
+                    The image shows both the laptop and the controller communicating.
+                    After testing the basics out with the console application I rewrote some of its code to port it into the Unity Engine as a class named Controller.
+                    Controller would abstract the lower level communication and make it easy to use in a game as an input device.
+                    Controller also optionally converted the raw accelerometer numbers into meters per second per second using the Adafruit LIS3DH sensor library source code as a reference.
+
+                </p>
+            </div>
+            <div class = "row">
+                <div class = "col-lg">
+                    <br>
+                    <img src="img2.png" class="img-responsive margin" style="width:80%" alt="Sew">
+                </div>
+            </div>
+            <div class="col-sm-8">
+                <p>
+                <br>
+                    Using the controller class I added in a cube and drew some simple UI animations for the connection and disconnection controller states.
+                    I changed the scene a little bit before finalizing the build settings and building the project.
+                </p>
+            </div>
+            <div class="col-sm-8">
+                <b>Demo</b>
+                <p>
+                <br>
+                    I had trouble recording a video of the demo that with a small enough file size without making the resolution too low so I
+                    am going to share my screen.
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
