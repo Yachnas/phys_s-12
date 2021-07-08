@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>PHYSCI 70: Intro to Digital Fabrication </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <link href="./style.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container-fluid bg-3 text-start">
+        <br>
+        <h3>Programmable Electronics</h3>
+        <br>
+        <div class = "row">
+            <div class="col-sm-8">
+                <b>Assignment</b>
+                <p>
+                <br>
+                    Program a microcontroller to produce an output using at least one button for input. Include a conditional statement and a for() loop.
+                    Then think about your final project and any additional components you might want. Start working on the 3D design for your project, especially components you might want to be lasercut or 3D printed.
+                </p>
+            </div>
+        </div>
+        <div class = "row">
+            <div class="col-sm-8">
+                <b>Circuit building</b>
+                <p>
+                <br>
+                    I apoligize, I could not find my buttons so instead I changed the input to the accelerometer.
+                    I gathered the necessary materials to build the circuit: an ESP32 Huzzah microcontroller, some female and male connections, a green LED, a 470 ohm resistor, and an accelerometer.
+                    I then construct the circuit, with the accelerometer acting as an input and the LED acting as an output. The accelerometer and the ESP32 microcontroller were previously wired from the last assignment,
+                    so all I had to wire was the LED portion of the circuit.
+                </p>
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-lg">
+                <br>
+                <img src="img1.jpg" class="img-responsive margin" style="width:40%" alt="Sew">
+            </div>
+        </div>
+        <div class = "row">
+            <div class="col-sm-8">
+                <b><br>Microcontroller firmware</b>
+                <p>
+                <br>
+                    I then wrote the firmware on the microcontroller. I wanted the LED to blink quickly when acceleration was detected, so I wrote a for() loop that would run
+                    if the magnitude of the accelerometer was greater than 18000. Since I was using raw sensor values this number was an arbitrary value roughly equal to the magnitude when any outside force acted on the circuit.
+                </p>
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-lg">
+                <br>
+                <img src="img5.png" class="img-responsive margin" style="width:40%" alt="Sew">
+            </div>
+        </div>
+        <div class = "row">
+            <div class="col-sm-8">
+                <b>Completed circuit</b>
+                <p>
+                <br>
+                    After finalizing the firmware I uploaded it to the microcontroller and the circuit worked successfully.
+                    The LED pulsed when the circuit was moved and remained off otherwise.
+                </p>
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-sm">
+                <br>
+                <img src="img2.jpg" class="img-responsive margin" style="width:80%" alt="Sew">
+            </div>
+            <div class = "col-sm">
+                <p>
+                <br>
+                    This first image shows the circuit as there is little acceleration.
+                </p>
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-sm">
+                <br>
+                <img src="img3.jpg" class="img-responsive margin" style="width:80%" alt="Sew">
+            </div>
+            <div class = "col-sm">
+                <p>
+                <br>
+                    This second image shows the circuit as there is greater acceleration.
+                </p>
+            </div>
+        </div>
+        <div class = "row">
+            <div class="col-sm-8">
+                <b><br>Final Project Components</b>
+                <p>
+                <br>
+                    I sketched some ideas for what I would like my final project to look like. I am a fan of woodwork, so I want to experiment with a laser-cut
+                    wooden chassis for my controller. I might look into wooden interlocking joints to find an elegant mechanism I could use to create a robust but slim box to house the controller in.
+                    I don't know if I will add LED's or any holes in the box yet because I like the idea of just a simple wooden brick.
+                </p>
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-lg">
+                <br>
+                <img src="img4.png" class="img-responsive margin" style="width:40%" alt="Sew">
+            </div>
+        </div>
+        <div class = "row">
+            <div class="col-sm-8">
+                <p>
+                <br>
+                    If this design works out alright I definitely want to try out more types of wood for creating hardware.
+                    Maybe a more textured and unique wood would quell the cheap feeling consumers get when they grip a thin wooden enclosure.
+                    But it might be hard because it could just end up looking like an extravagent piece of furniture rather than an intimate tool for play.
+                    Maybe I could compromise between inorganic and organic by mixing hardwood and anodized aluminum.
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
