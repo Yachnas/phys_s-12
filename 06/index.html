@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>PHYSCI 70: Intro to Digital Fabrication </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <link href="./style.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container-fluid bg-3 text-start">
+        <br>
+        <h3>Programmable Electronics</h3>
+        <br>
+        <div class = "row">
+            <div class="col-sm-8">
+                <b>Assignment</b>
+                <p>
+                <br>
+                    Design and prepare to print (i.e. slice) either (a) a component you need for your final project or (b) a small object that could not be (easily) made by subtractive methods. Upload your 3D model file (e.g. .f3z), STL file, and sliced gcode file to your documentation.
+                    Afterwards scan something using a photogrammetry application.
+                </p>
+            </div>
+        </div>
+        <div class = "row">
+            <div class="col-sm-8">
+                <b>Modeling</b>
+                <p>
+                <br>
+                    For the first portion of the assignment I chose to model a planter container to house a plant in.
+                    I wanted the planter to have a screw at its center to make it look like a cool piece of decor for a room.
+                    I sketched out the planter and included its basic dimensions to prepare to model it.
+                </p>
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-lg">
+                <br>
+                <img src="img15.png" class="img-responsive margin" style="width:80%" alt="Sew">
+            </div>
+        </div>
+        <div class = "row">
+            <div class="col-sm-8">
+                <p>
+                <br>
+                    I then began the modeling process. I started with the main planter itself.
+                    I created a sketch and drew up a circle matching the aforementioned dimensions in the sketch.
+                    I then extruded the circle and used a hole modification tool to put a threaded hole into the side of the planter.
+                    Afterwards I filleted the bottom edges of the planter to complete its look.
+                </p>
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-lg">
+                <br>
+                <img src="img1.png" class="img-responsive margin" style="width:20%" alt="Sew">
+                <img src="img2.png" class="img-responsive margin" style="width:20%" alt="Sew">
+                <img src="img3.png" class="img-responsive margin" style="width:20%" alt="Sew">
+            </div>
+        </div>
+        <div class = "row">
+            <div class="col-sm-8">
+                <p>
+                <br>
+                    With the main planter component finished I began on the screw. I created a sketch and drew a silhouette of the screw from the side.
+                    I then used the revolve tool to rotate it one full revolution about the y-axis to form a solid. I selected the top face of the solid
+                    and created another sketch on it before approximating the design from the aforementioned sketch. After completing the shape I extruded it into the screw by a
+                    negative value. I filleted the edges of the indentation and the screw to soften its appearance. Lastly I used the solid thread tool to thread the surface of the solid to complete the look.
+                </p>
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-lg">
+                <br>
+                <img src="img4.png" class="img-responsive margin" style="width:20%" alt="Sew">
+                <img src="img5.png" class="img-responsive margin" style="width:20%" alt="Sew">
+                <img src="img6.png" class="img-responsive margin" style="width:20%" alt="Sew">
+                <img src="img7.png" class="img-responsive margin" style="width:20%" alt="Sew">
+                <img src="img8.png" class="img-responsive margin" style="width:20%" alt="Sew">
+            </div>
+        </div>
+        <div class = "row">
+            <div class="col-sm-8">
+                <p>
+                <br>
+                    With both the main planter component and the screw component finished I could create an assembly to render.
+                    I created a new file and dragged both components in and moved the screw until it fit into the screw hole I had burrowed into the planter.
+                    After finishing the model I exported it as an .stl file and a .f3z file. Both files are available in the downloads section below.
+                    I then imported the model into web slicer Kiri:Moto. I sliced the model and exported the gcode from the application. The gcode is also available in the downloads section below.
+                </p>
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-lg">
+                <br>
+                <img src="img9.png" class="img-responsive margin" style="width:20%" alt="Sew">
+                <img src="img11.png" class="img-responsive margin" style="width:20%" alt="Sew">
+                <img src="img12.png" class="img-responsive margin" style="width:20%" alt="Sew">
+            </div>
+        </div>
+        <div class = "row">
+            <div class="col-sm-8">
+                <b>Downloads</b>
+                <p>
+                <br>
+                    Here are all the files from the first portion of this assignment.<br>
+                    The .f3z file can be downloaded <a download href="export1.f3z">here</a>,<br>
+                    the .stl file can be downloaded <a download href="export2.stl">here</a>,<br>
+                    and the gcode can be downloaded <a download href="export3.km">here</a>.<br>
+                </p>
+            </div>
+        </div>
+        <div class = "row">
+            <div class="col-sm-8">
+                <b>Rendering</b>
+                <p>
+                <br>
+                    After exporting the necessary files (.stl, .f3z) from fusion360 and generating the gcode for the 3d printer
+                    I switched to the render workflow and played around with different materials for the planter and the screw.
+                    I ended up deciding on white silicon for the planter because it looked like ceramics and I used aluminum for the screw.
+                    I was pretty happy with the final render. It looked a lot like what I had imagined when I drew up the sketch.
+                </p>
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-lg">
+                <br>
+                <img src="img10.png" class="img-responsive margin" style="width:40%" alt="Sew">
+            </div>
+        </div>
+        <div class = "row">
+            <div class="col-sm-8">
+                <b><br>Photogrammetry</b>
+                <p>
+                <br>
+                    For the second portion of the assignment I downloaded the 3d scanner app off the appstore.
+                    However, it turned out that my iphone did not have an onboard lidar scanner so instead I downloaded the capture app off the appstore.
+                    This app used the truedepth features of the front facing camera rather than a lidar scanner, so it was harder to use.
+                    I decided to scan a coffee cup, which turned out alright.
+                    The scanner could only capture a couple of views of the mug at a time to generate a 3d model, but the textures looked really accurate and neat until they phased out.
+                </p>
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-lg">
+                <br>
+                <img src="img13.jpeg" class="img-responsive margin" style="width:40%" alt="Sew">
+                <img src="img14.jpeg" class="img-responsive margin" style="width:40%" alt="Sew">
+            </div>
+        </div>
+    </div>
+</body>
+</html>
