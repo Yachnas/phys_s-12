@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>PHYSCI 70: Intro to Digital Fabrication </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <link href="./style.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container-fluid bg-3 text-start">
+        <br>
+        <h3>Electronic Output Devices</h3>
+        <br>
+        <div class = "row">
+            <div class="col-sm-8">
+                <b>Assignment</b>
+                <p>
+                <br>
+                    Use an output device that you haven't used before.
+                    Write a microcontroller program that integrates at least one input device and one output device. Avoid the delay() function by using either timers or interrupts.
+                </p>
+            </div>
+        </div>
+        <div class = "row">
+            <div class="col-sm-8">
+                <b>Building</b>
+                <p>
+                <br>
+                    For my assignment I decided to use an accelerometer as an input device and the tft display as an output device.
+                    I wanted to use the accelerometer to interact with the tft display contents.
+                    Since I used software SPI to communicate with the peripherals I used the GPIO pins alongside the digital pins (there were not enough pins to exclusively use digital input pins).
+                    I referred to the wiring instructions
+                    <a href = "https://learn.adafruit.com/adafruit-lis3dh-triple-axis-accelerometer-breakout/arduino">here</a>
+                    for the accelerometer and I used
+                    <a href = "https://learn.adafruit.com/adafruit-1-14-240x135-color-tft-breakout/arduino-wiring-test">this</a>
+                    to wire the tft display.
+                </p>
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-lg">
+                <br>
+                <img src="img1.jpg" class="img-responsive margin" style="width:80%" alt="Sew">
+                <img src="img2.jpg" class="img-responsive margin" style="width:80%" alt="Sew">
+            </div>
+        </div>
+        <div class = "row">
+            <div class="col-sm-8">
+                <b><br>Firmware</b>
+                <p>
+                <br>
+                    After I built the circuit I wrote the firmware for the microcontroller.
+                    I averaged and reduced the accelerometer input for the x and y axes to make it easier to move the circle on the tft display.
+                    I made sure to avoid using the delay function in the loop by using a timer.
+                    I also made a debug mode toggled with a macro for looking at the accelerometer data alongside guidelines on the tft display.
+                </p>
+                <p>
+                    *My bad, I got ride of the angle brackets surrounding each header file in the first 6 preprocessor statements
+                    because leaving them in made them disappear on the website.
+                    If you have a 1.14" adafruit tft display and you change the software spi pins
+                    in the lis3dh and tft class constructor parameters to what you have it should work fine after that.
+                <br>
+                </p>
+                <pre>
+                <br>
+                        #include Wire.h
+                        #include SPI.h
+                        #include Adafruit_LIS3DH.h
+                        #include Adafruit_Sensor.h
+                        #include Adafruit_ST7789.h
+                        #include Adafruit_GFX.h
+
+                        #define debug false
+
+                        Adafruit_LIS3DH lis = Adafruit_LIS3DH(14, 32, 25, 26);
+                        Adafruit_ST7789 tft = Adafruit_ST7789(33, 15, 27, 13, -1);
+
+                        const int w = 135;
+                        const int h = 240;
+
+                        int t1 = 0;
+
+                        struct vector
+                        {
+                            int x = 0;
+                            int y = 0;
+                        };
+
+                        struct vector p2;
+                        struct vector p1;
+                        struct vector v;
+                        struct vector a1;
+
+                        void setup()
+                        {
+                            p2.x = w / 2;
+                            p2.y = h / 2;
+
+                            tft.init(w, h);
+                            tft.setSPISpeed(40000000);
+                            tft.setTextColor(ST77XX_WHITE);
+                            tft.setTextSize(1);
+                            lis.begin(0x18);
+                            tft.fillScreen(ST77XX_BLACK);
+                        }
+
+                        void loop()
+                        {
+                            const int t2 = millis();
+
+                            if (t2 - t1 > 5)
+                            {
+                                struct vector a2;
+                                struct vector da;
+
+                                const int n = 10;
+                                const int sn = 1000;
+                                const int r = 8;
+                                int i;
+
+                                for (i = 0; i < n; i++)
+                                {
+                                    lis.read();
+                                    a2.x += lis.x;
+                                    a2.y += lis.y;
+                                }
+
+                                a2.x /= n * sn;
+                                a2.y /= n * sn;
+                                da.x = a2.x - a1.x;
+                                da.y = a2.y - a1.y;
+
+                                v.x += da.y;
+                                v.y += da.x;
+
+                                p2.x += v.x;
+                                p2.y += v.y;
+
+                                if (p2.x - r > w)
+                                    p2.x = -r;
+                                if (p2.x + r < 0)
+                                    p2.x = w + r;
+                                if (p2.y - r > h)
+                                    p2.y = -r;
+                                if (p2.y + r < 0)
+                                    p2.y = h + r;
+
+                                if (p1.x != p2.x || p1.y != p2.y)
+                                {
+                                    if (debug)
+                                    {
+                                        tft.drawFastVLine(p1.x, 0, h, ST77XX_BLACK);
+                                        tft.drawFastHLine(0, p1.y, w, ST77XX_BLACK);
+                                        tft.drawCircle(p1.x, p1.y, r * 5, ST77XX_BLACK);
+                                        tft.fillRect(8, 8, w, 24, ST77XX_BLACK);
+                                        tft.drawFastVLine(p2.x, 0, h, ST77XX_GREEN);
+                                        tft.drawFastHLine(0, p2.y, w, ST77XX_RED);
+                                        tft.drawCircle(p2.x, p2.y, r * 5, ST77XX_MAGENTA);
+
+                                        tft.setCursor(8, 8);
+                                        tft.print("dax: ");
+                                        tft.print(da.x);
+                                        tft.print(" day: ");
+                                        tft.print(da.y);
+                                        tft.setCursor(8, 16);
+                                        tft.print("ax: ");
+                                        tft.print(a2.x);
+                                        tft.print(" ay: ");
+                                        tft.print(a2.y);
+                                        tft.setCursor(8, 24);
+                                        tft.print("vx: ");
+                                        tft.print(v.x);
+                                        tft.print(" vy: ");
+                                        tft.print(v.y);
+                                    }
+
+                                    tft.fillCircle(p1.x, p1.y, r, ST77XX_BLACK);
+                                    tft.fillCircle(p2.x, p2.y, r, ST77XX_WHITE);
+                                    p1 = p2;
+                                }
+
+                                t1 = t2;
+                                a1 = a2;
+                            }
+                        }
+                </pre>
+                <p>
+                <br>
+                    I used the debug mode to tweak the sensitivity and the input to make it smoother.
+                    It was really helpful because the raw accelerometer input had a lot of noise, and changing it made it easier to interact with.
+                    The image to the left illustrates normal mode and the image to the right illustrates debug mode.
+                    Debug mode has guidelines for clarity.
+                    In the top left corner of the display it also prints the change in acceleration from the last render frame,
+                    the current acceleration, and the current velocity of the dot.
+                    The dot only moves based on the x and y input from the accelerometer.
+                    Maybe in the future I could make a 3D version with a cube or something with a simple 3D renderer to visualize acceleration on the x, y and z axes.
+                </p>
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-lg">
+                <br>
+                <img src="img3.jpg" class="img-responsive margin" style="width:30%" alt="Sew">
+                <img src="img4.jpg" class="img-responsive margin" style="width:30%" alt="Sew">
+            </div>
+        </div>
+        <div class = "row">
+            <div class="col-sm-8">
+                <b><br>Final Result</b>
+                <p>
+                <br>
+                    This is the final result.
+                    I was definitely happy with how it turned out. It felt satisfying to mess around with the dot by tilting the board.
+                    The first video shows the microcontroller with debug mode disabled, while the second video shows the microcontroller with debug mode enabled.
+                    It was cool watching the dot accelerate as I tilted the board to the side and put it flat on the table.
+                </p>
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-lg">
+                <br>
+                <video controls style="width:20%; min-width:300px">
+                    <source src="vid1.mp4" type="video/mp4">
+                </video>
+                <video controls style="width:20%; min-width:300px">
+                    <source src="vid2.mp4" type="video/mp4">
+                </video>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
