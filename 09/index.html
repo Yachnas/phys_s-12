@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>PHYSCI 70: Intro to Digital Fabrication </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <link href="./style.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container-fluid bg-3 text-start">
+        <br>
+        <h3>Networking</h3>
+        <br>
+        <div class = "row">
+            <div class="col-sm-8">
+                <b>Assignment</b>
+                <p>
+                <br>
+                    Control a board from a local wireless network.
+                    Program a microcontroller to obtain and respond to information from the internet. Optionally, work with a partner to control a device over a remote server.
+                </p>
+            </div>
+        </div>
+        <div class = "row">
+            <div class="col-sm-8">
+                <b>Building</b>
+                <p>
+                <br>
+                    For the assignment I chose to control a board from a local wireless network by having it obtain and respond to information from the internet.
+                    I chose to reuse the board I built from last week's assignment because it had everything I needed: an accelerometer, a tft display and an ESP32 microcontroller with wifi capabilities.
+                </p>
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-lg">
+                <br>
+                <img src="img1.jpg" class="img-responsive margin" style="width:80%" alt="Sew">
+                <img src="img2.jpg" class="img-responsive margin" style="width:80%" alt="Sew">
+            </div>
+        </div>
+        <div class = "row">
+            <div class="col-sm-8">
+                <p>
+                <br>
+                    I wanted the board to have a cube on the tft display to visualize its movement.
+                    I thought this would be cool because I could just use what I learned from the previous assignment and improve on it.
+                    I also wanted the board to transmit its averaged accelerometer input to the laptop over udp so that it could be displayed on a console program.
+                </p>
+            </div>
+        </div>
+        <div class = "row">
+            <div class="col-sm-8">
+                <b><br>Firmware</b>
+                <p>
+                <br>
+                    I wrote the firmware for the board.
+                    I reused code from my final project prototype assignment to complete the networking part, so all I had to do was the cube rendering part.
+                    Rendering the cube was really interesting. I used
+                    <a href = "https://en.wikipedia.org/wiki/Rotation_matrix">this</a>
+                    article on wikipedia to reference rotation matrices, and I looked at the adafruit_gfx.h header file on my laptop as well as the previous
+                    assignment firmware for choosing functions to draw the cube.
+                    I also added a rest mode that makes the cube fade out after a couple of seconds idling, and I made a connecting prompt at the beginning.
+                </p>
+                <p>
+                    I made the accelerometer input reading and the drawing parts happen as fast as possible because I had a timer setup before for 100 hertz, but I found out that
+                    it was taking way longer to draw the cube than I thought which made the timer pointless so I just left it out.
+                    On the other hand I made the transmission only happen at only 25 hertz because I did not implement
+                    flow control and when I made the send rate too high the console started stuttering a little bit.
+                </p>
+                <p>
+                    *My bad, I got ride of the angle brackets surrounding each header file in the include preprocessor statements
+                    because leaving them in made them disappear on the website.
+                    If you have a 1.14" adafruit tft display and you change the software spi pins
+                    in the lis3dh and tft class constructor parameters to what you have it should work fine after that.
+                </p>
+                <pre>
+                <br>
+                    //sanchay 7-21-2021 io_v4
+                    //todo -
+
+                    #include Wire.h
+                    #include SPI.h
+                    #include WiFi.h
+                    #include WiFiUdp.h
+                    #include Adafruit_LIS3DH.h
+                    #include Adafruit_Sensor.h
+                    #include Adafruit_ST7789.h
+                    #include Adafruit_GFX.h
+
+                    Adafruit_LIS3DH lis = Adafruit_LIS3DH(14, 32, 25, 26);
+                    Adafruit_ST7789 tft = Adafruit_ST7789(33, 15, 27, 13, -1);
+
+                    struct vector
+                    {
+                        float x = 0;
+                        float y = 0;
+                        float z = 0;
+                    };
+
+                    struct pixel
+                    {
+                        int16_t x = 0;
+                        int16_t y = 0;
+                    };
+
+                    const uint16_t port = 47777;
+                    WiFiUDP udp;
+
+                    const uint16_t w = 135;
+                    const uint16_t h = 240;
+                    const uint8_t n = 8;
+
+                    uint32_t t1 = 0;
+                    uint32_t it = 0;
+                    uint32_t lc = ST77XX_WHITE;
+                    bool rest = false;
+
+                    struct vector box[n];
+                    struct pixel curr[n];
+                    struct pixel prev[n];
+
+                    void setup()
+                    {
+                        const float len = 15;
+
+                        tft.init(w, h);
+                        tft.setSPISpeed(40000000);
+                        tft.setTextColor(ST77XX_WHITE);
+                        tft.setTextWrap(true);
+                        tft.setTextSize(2);
+                        tft.fillScreen(ST77XX_BLACK);
+                        tft.setCursor(8, h / 2);
+                        tft.print("connecting");
+
+                        WiFi.mode(WIFI_STA);
+                        WiFi.disconnect();
+                        WiFi.begin(SSID, PW);
+
+                        while (WiFi.status() != WL_CONNECTED)
+                            yield();
+
+                        tft.fillScreen(ST77XX_BLACK);
+                        lis.begin(0x18);
+                        udp.begin(port);
+
+                        set(0, -len, -len, -len);
+                        set(1, len, -len, -len);
+                        set(2, len, len, -len);
+                        set(3, -len, len, -len);
+                        set(4, -len, -len, len);
+                        set(5, len, -len, len);
+                        set(6, len, len, len);
+                        set(7, -len, len, len);
+                    }
+
+                    void loop()
+                    {
+                        uint8_t i;
+                        const uint8_t an = 10;
+                        const int16_t sn = 20000;
+                        const uint32_t t2 = millis();
+                        struct vector aa2;
+
+                        for (i = 0; i < an; i++)
+                        {
+                            lis.read();
+                            aa2.x += lis.x;
+                            aa2.y += lis.y;
+                            aa2.z += lis.z;
+                        }
+
+                        aa2.x /= an * sn;
+                        aa2.y /= an * sn;
+                        aa2.z /= an * sn;
+
+                        if (sqrt(sq(aa2.x) + sq(aa2.y)) <= 0.065)
+                        {
+                            if (!rest && it++ == 250)
+                            {
+                                lc = 0x5ACB;
+                                it = 0;
+                                rest = true;
+                            }
+                        }
+                        else if (rest)
+                        {
+                            lc = ST77XX_WHITE;
+                            rest = false;
+                        }
+
+                        for (i = 0; i < n; i++)
+                        {
+                            struct vector v = box[i];
+                            struct pixel p;
+
+                            box[i].y = v.y * cos(aa2.x) + v.z * -sin(aa2.x);
+                            box[i].z = v.y * sin(aa2.x) + v.z * cos(aa2.x);
+
+                            v = box[i];
+                            box[i].x = v.x * cos(aa2.y) + v.z * sin(aa2.y);
+                            box[i].z = v.x * -sin(aa2.y) + v.z * cos(aa2.y);
+
+                            p.x = box[i].x + w/ 2;
+                            p.y = -box[i].y + h / 2;
+
+                            prev[i] = curr[i];
+                            curr[i] = p;
+                        }
+
+                        for (i = 0; i < 4; i++)
+                        {
+                            const uint8_t j = i + 4;
+                            const uint8_t k = (i + 1) % 4;
+
+                            draw(i, k);
+                            draw(i, j);
+                            draw(j, k + 4);
+                        }
+
+                        if (WL_CONNECTED && !rest && t2 - t1 > 40)
+                        {
+                            udp.beginPacket(IP, port);
+                            serialize(&aa2.x);
+                            serialize(&aa2.y);
+                            serialize(&aa2.z);
+                            udp.endPacket();
+
+                            t1 = t2;
+                        }
+                    }
+
+                    void serialize(float* n)
+                    {
+                        uint32_t* ptr = (uint32_t*) n;
+
+                        for (uint8_t i = 0; i < 4; i++)
+                            udp.write((byte)(*ptr >> (i * 8)));
+                    }
+
+                    void draw(uint8_t a, uint8_t b)
+                    {
+                        tft.drawLine(prev[a].x, prev[a].y, prev[b].x, prev[b].y, ST77XX_BLACK);
+                        tft.drawLine(curr[a].x, curr[a].y, curr[b].x, curr[b].y, lc);
+                    }
+
+                    void set(uint8_t n, float x, float y, float z)
+                    {
+                        box[n].x = x;
+                        box[n].y = y;
+                        box[n].z = z;
+                    }
+                </pre>
+            </div>
+        </div>
+        <div class = "row">
+            <div class="col-sm-8">
+                <b>Console</b>
+                <p>
+                <br>
+                    After that I wrote a simple .NET core console application to display the averaged accelerometer input transmitted from the ESP32 via udp.
+                    The application runs on .NET core 3.1 and the code is below.
+                </p>
+                <pre>
+                <br>
+                //sanchay 7-21-2021 iowin
+                //todo -
+
+                using System;
+                using System.Net;
+                using System.Net.Sockets;
+
+                namespace input_output_window
+                {
+                    class Program
+                    {
+                        static void Main(string[] args)
+                        {
+                            Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+                            socket.Blocking = false;
+                            socket.Bind(new IPEndPoint(IPAddress.Any, 47777));
+
+                            if (!socket.IsBound)
+                                return;
+
+                            byte[] recv = new byte[32];
+                            bool run = true;
+
+                            while (run)
+                            {
+                                while (socket.Available > 0)
+                                {
+                                    EndPoint ep = new IPEndPoint(IPAddress.Any, 0);
+                                    if (socket.ReceiveFrom(recv, 0, recv.Length, SocketFlags.None, ref ep) > recv.Length)
+                                        break;
+
+                                    float x = BitConverter.ToSingle(recv, 0);
+                                    float y = BitConverter.ToSingle(recv, 4);
+                                    float z = BitConverter.ToSingle(recv, 8);
+
+                                    Console.WriteLine(ep.ToString());
+                                    Console.WriteLine("{" + x + ", " + y + ", " + z + "}");
+                                }
+                            }
+                        }
+                    }
+                }
+                </pre>
+            </div>
+        </div>
+        <div class = "row">
+            <div class="col-sm-8">
+                <b><br>Final Result</b>
+                <p>
+                <br>
+                    I was really happy with the final results. It was fun to interact with the cube and look at the accelerometer input on my laptop.
+                    The first image shows the board with rest mode off, and the second image shows the board with rest mode on.
+                    The third and fourth images just show close ups of the display and its connecting prompt.
+                    <br><br>
+                    At the bottom the first video shows the cube spinning when idle, the next one shows the board being moved and the last image shows the
+                    data received from the board on my laptop.
+                </p>
+            </div>
+        </div>
+        <div class = "col-lg">
+            <br>
+            <img src="img4.jpg" class="img-responsive margin" style="width:30%" alt="Sew">
+            <img src="img3.jpg" class="img-responsive margin" style="width:30%" alt="Sew">
+        </div>
+        <div class = "col-lg">
+            <br>
+            <img src="img7.jpg" class="img-responsive margin" style="width:30%" alt="Sew">
+            <img src="img6.jpg" class="img-responsive margin" style="width:30%" alt="Sew">
+        </div>
+        <div class = "row">
+            <div class = "col-lg">
+                <br>
+                <video controls style="width:80%; min-width:300px">
+                    <source src="vid1.mp4" type="video/mp4">
+                </video>
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-lg">
+                <br>
+                <video controls style="width:80%; min-width:300px">
+                    <source src="vid2.mp4" type="video/mp4">
+                </video>
+            </div>
+        </div>
+        <div class = "col-lg">
+            <br>
+            <img src="img5.png" class="img-responsive margin" style="width:80%" alt="Sew">
+        </div>
+    </div>
+</body>
+</html>
