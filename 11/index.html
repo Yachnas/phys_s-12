@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>PHYSCI 70: Intro to Digital Fabrication </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <link href="./style.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container-fluid bg-3 text-start">
+        <br>
+        <h3>Computer Programming</h3>
+        <br>
+        <div class = "row">
+            <div class="col-sm-8">
+                <b>Assignment</b>
+                <p>
+                <br>
+                    Send data to a computer and display results with code you've written. Then document progress on your final project. Consolidate your final project updates to a single "process" page. Optionally, create an additional concise "finished product" page. Plan on creating a 1-minute demo video for your final project.
+                </p>
+            </div>
+        </div>
+        <div class = "row">
+            <div class="col-sm-8">
+                <b>Data to a Computer</b>
+                <p>
+                <br>
+                    For the first part of the assignment
+                    I wanted to send accelerometer data from the microcontroller and visualize it in the unity3d engine.
+                    I wanted to illustrate the orientation of the acceleromter with a cube, and I wanted to illustrate the values as changing text next to the cube.
+                </p>
+            </div>
+        </div>
+        <div class = "row">
+            <div class="col-sm-8">
+                <b>Build</b>
+                <p>
+                <br>
+                    First I built the circuit using an esp32 microcontroller, an accelerometer, a breadboard and some male wires.
+                    This was the same circuit I built for a previous assignment, but I think I might have used different digital pins that time.
+                </p>
+            </div>
+        </div>
+        <div class = "col-lg">
+            <br>
+            <img src="img1.jpg" class="img-responsive margin" style="width:50%" alt="Sew">
+            <img src="img2.jpg" class="img-responsive margin" style="width:50%" alt="Sew">
+        </div>
+        <div class = "row">
+            <div class="col-sm-8">
+                <b><br>Firmware</b>
+                <p>
+                <br>
+                    After building the circuit I wrote the firmware for the esp32 microcontroller.
+                    All I had the microcontroller do was send averaged accelerometer data to my laptop via udp.
+                    A lot of the code was boilerplate so I just reused most of the things I did for previous assignments.
+                </p>
+                <p>
+                    *My bad, I got ride of the angle brackets surrounding each header file in the include preprocessor statements
+                    because leaving them in made them disappear on the website.
+                    If you have an adafruit lis3dh accelerometer and you change the spi pins
+                    in the lis3dh object constructor parameter to the appropriate ones for your circuit then it should work fine.
+                </p>
+                <br>
+                <pre>
+                        #include Wire.h
+                        #include SPI.h
+                        #include WiFi.h
+                        #include WiFiUdp.h
+                        #include Adafruit_LIS3DH.h
+                        #include Adafruit_Sensor.h
+
+                        Adafruit_LIS3DH lis = Adafruit_LIS3DH(33, 12, 27, 13);
+                        WiFiUDP udp;
+
+                        void setup()
+                        {
+                            WiFi.mode(WIFI_STA);
+                            WiFi.disconnect();
+                            WiFi.begin("***", "***");
+
+                            while (WiFi.status() != WL_CONNECTED)
+                                yield();
+
+                            lis.begin(0x18);
+                            udp.begin(47777);
+                        }
+
+                        void loop()
+                        {
+                            static int t1 = 0;
+                            int t2 = millis();
+
+                            if (t2 - t1 > 500)
+                            {
+                                if (!WL_CONNECTED)
+                                {
+                                    t1 = t2;
+                                    return;
+                                }
+
+                                const uint8_t n = 10;
+                                const int16_t sn = 300;
+                                int16_t x = 0;
+                                int16_t y = 0;
+                                int16_t z = 0;
+
+                                for (uint8_t i = 0; i < n; i++)
+                                {
+                                    lis.read();
+                                    x += lis.x;
+                                    y += lis.y;
+                                    z += lis.z;
+                                }
+
+                                x /= n * sn;
+                                y /= n * sn;
+                                z /= n * sn;
+
+                                udp.beginPacket();
+                                serialize(x);
+                                serialize(y);
+                                serialize(z);
+                                udp.endPacket();
+
+                                t1 = t2;
+                            }
+                        }
+
+                        void serialize(int16_t x)
+                        {
+                            udp.write((uint8_t)x);
+                            udp.write((uint8_t)(x >> 8));
+                        }
+
+                </pre>
+            </div>
+        </div>
+        <div class = "row">
+            <div class="col-sm-8">
+                <b>Software</b>
+                <p>
+                <br>
+                    After I wrote the firmware I began to write the software for unity.
+                    I wrote a class to get the data from the microcontroller over udp
+                    and display it through text and the orientation of the cube.
+                </p>
+                <p>
+                <br>
+                    For the orientation part with the trig I used
+                    <a href = "https://www.youtube.com/watch?v=KMhbV1p3MWk">this</a>
+                    youtube tutorial on converting acceleration magnitudes into orientation (roll and pitch).
+                    The video was really helpful because it helped me understand how the trig for preparing and converting
+                    the x, y and z magnitudes into an orientation worked.
+                <br>
+                <pre>
+                    <br>
+                    using System;
+                    using System.Net;
+                    using System.Net.Sockets;
+                    using UnityEngine;
+                    using UnityEngine.UI;
+
+                    public class Control : MonoBehaviour
+                    {
+                        private Socket socket;
+                        private byte[] recv;
+                        private byte[] send;
+
+                        private Transform cube;
+
+                        [SerializeField] private Text tx;
+                        [SerializeField] private Text ty;
+                        [SerializeField] private Text tz;
+
+                        private const byte length = 8;
+
+                        void Start()
+                        {
+                            socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+                            recv = new byte[length];
+                            send = new byte[length];
+                            socket.Bind(new IPEndPoint(IPAddress.Any, 47777));
+                        }
+
+                        void Update()
+                        {
+                            if (!socket.IsBound)
+                                return;
+
+                            while (socket.Available > 0)
+                            {
+                                if (socket.Receive(recv) > length)
+                                    break;
+
+                                short x = BitConverter.ToInt16(recv, 0);
+                                short y = BitConverter.ToInt16(recv, 2);
+                                short z = BitConverter.ToInt16(recv, 4);
+
+                                tx.text = x.ToString();
+                                ty.text = y.ToString();
+                                tz.text = z.ToString();
+
+                                float roll = Mathf.Atan(y / Mathf.Sqrt(Mathf.Pow(x, 2) + Mathf.Pow(z, 2))) * Mathf.Rad2Deg;
+                                float pitch = Mathf.Atan(-x / Mathf.Sqrt(Mathf.Pow(y, 2) + Mathf.Pow(z, 2))) * Mathf.Rad2Deg;
+                                cube.rotation = Quaternion.Euler(roll, pitch, 0);
+                            }
+                        }
+                    }
+                </pre>
+            </div>
+        </div>
+        <div class = "row">
+            <div class="col-sm-8">
+                <b><br>Final Result</b>
+                <p>
+                <br>
+                    These are the final results.
+                    I was really happy with how the finished assignment looked.
+                    The cube orientation was way more accurate than in the final project prototype assignment,
+                    and looking at the values changing was cool as well.
+                </p>
+                <p>
+                <br>
+                    The first image shows the unity window with the cube
+                    (accelerometer orientation) to the left and the accelerometer
+                    values to the right. The second image shows the controller connected and powered
+                    on. Lastly the third image is a snapshot of the window as the program is running
+                    and the accelerometer is connected and being moved around.
+                </p>
+            </div>
+        </div>
+        <div class = "col-lg">
+            <br>
+            <img src="img4.png" class="img-responsive margin" style="width:50%" alt="Sew">
+            <img src="img3.jpg" class="img-responsive margin" style="width:50%" alt="Sew">
+            <img src="img5.png" class="img-responsive margin" style="width:50%" alt="Sew">
+        </div>
+    </div>
+</body>
+</html>
