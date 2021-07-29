@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>PHYSCI 70: Intro to Digital Fabrication </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <link href="./style.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container-fluid bg-3 text-start">
+        <br>
+        <h3>Final Project</h3>
+        <br>
+        <div class = "row">
+            <div class="col-sm-8">
+                <b><br>Introduction</b>
+                <br>7/28/2021
+                <p>
+                <br>
+                    For my final project I wanted to make a simple controller that can be used to play a game.
+                    You would physically interact with the controller to make things happen onscreen.
+                </p>
+                <b><br>Device Class</b>
+                <br>7/28/2021
+                <p>
+                <br>
+                    I wrote a c# unity device class to abstract controller connection, acceleration data and disconnection via udp.
+                    I could then use the device object in the game code to easily get acceleration input.
+                    This class is an improved version of the controller class I wrote for the final project prototype assignment.
+                    I used callbacks to make it easier to work with and I changed it so that only the game could
+                    disconnect from the controller. The controller previously disconnected when idle for a couple of seconds
+                    for demonstration purposes. (I wanted to show the disconnection/ connection animations and stuff)
+                </p>
+                <pre>
+                <br>
+                using System;
+                using System.Net;
+                using System.Net.Sockets;
+
+                public class Device
+                {
+                    private Socket socket;
+                    private byte[] recv;
+                    private byte[] send;
+                    private int hash;
+                    private bool conn;
+                    private bool disc;
+                    private EndPoint ep;
+                    private int idle;
+
+                    public delegate void callback();
+                    private callback on_conn;
+                    private callback on_disc;
+                    private callback on_sync;
+
+                    private const byte length = 8;
+                    private const byte id_conn = 1;
+                    private const byte id_sync = 2;
+                    private const byte id_disc = 3;
+
+                    public Input accel;
+                    public Input daccel;
+
+                    public struct Input
+                    {
+                        public int x;
+                        public int y;
+                        public int z;
+                    }
+
+                    public Device(callback _connect, callback _disconnect, callback _sync)
+                    {
+                        socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+                        recv = new byte[length];
+                        send = new byte[length];
+                        on_conn = _connect;
+                        on_disc = _disconnect;
+                        on_sync = _sync;
+                        accel = new Input();
+                        daccel = new Input();
+                        socket.Bind(new IPEndPoint(IPAddress.Loopback, 47777));
+                    }
+
+                    public void Disconnect()
+                    {
+                        if (conn)
+                            disc = true;
+                    }
+
+                    public void Listen()
+                    {
+                        if (!socket.IsBound)
+                            return;
+
+                        while (socket.Available > 0)
+                        {
+                            EndPoint tep = null;
+                            if (socket.ReceiveFrom(recv, ref tep) > length)
+                                break;
+                            byte id = recv[0];
+                            bool known = tep.GetHashCode() == hash;
+
+                            switch (id)
+                            {
+                                case id_conn:
+                                    if (known || !conn)
+                                    {
+                                        send[0] = id_conn;
+                                        hash = tep.GetHashCode();
+                                        ep = tep;
+                                        socket.SendTo(send, ep);
+
+                                        if (!conn)
+                                        {
+                                            conn = true;
+                                            on_conn();
+                                        }
+                                    }
+                                    break;
+                                case id_sync:
+                                    if (known && conn)
+                                    {
+                                        Input accel2 = new Input();
+
+                                        accel2.x = BitConverter.ToInt16(recv, 0);
+                                        accel2.y = BitConverter.ToInt16(recv, 2);
+                                        accel2.z = BitConverter.ToInt16(recv, 4);
+
+                                        daccel.x = accel2.x - accel.x;
+                                        daccel.y = accel2.y - accel.y;
+                                        daccel.z = accel2.z - accel.z;
+
+                                        on_sync();
+                                    }
+                                    break;
+                                case id_disc:
+                                    if (known && disc)
+                                    {
+                                        conn = false;
+                                        disc = false;
+                                        on_disc();
+                                    }
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+
+                        if (disc)
+                        {
+                            send[0] = id_disc;
+                            socket.SendTo(send, ep);
+                        }
+                    }
+                }
+                </pre>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
